@@ -7,6 +7,8 @@
 #include "usb.h"
 #include "uart.h"
 
+#define __weak __attribute__((weak))
+
 // this table converts from HAL_StatusTypeDef to POSIX errno
 const byte mp_hal_status_to_errno_table[4] = {
     [HAL_OK] = 0,
@@ -19,7 +21,7 @@ NORETURN void mp_hal_raise(HAL_StatusTypeDef status) {
     mp_raise_OSError(mp_hal_status_to_errno_table[status]);
 }
 
-int mp_hal_stdin_rx_chr(void) {
+__weak int mp_hal_stdin_rx_chr(void) {
     for (;;) {
 #if 0
 #ifdef USE_HOST_MODE
@@ -48,11 +50,11 @@ int mp_hal_stdin_rx_chr(void) {
     }
 }
 
-void mp_hal_stdout_tx_str(const char *str) {
+__weak void mp_hal_stdout_tx_str(const char *str) {
     mp_hal_stdout_tx_strn(str, strlen(str));
 }
 
-void mp_hal_stdout_tx_strn(const char *str, size_t len) {
+__weak void mp_hal_stdout_tx_strn(const char *str, size_t len) {
     if (MP_STATE_PORT(pyb_stdio_uart) != NULL) {
         uart_tx_strn(MP_STATE_PORT(pyb_stdio_uart), str, len);
     }
