@@ -431,28 +431,6 @@ void stm32_main(uint32_t reset_mode) {
     #if PREFETCH_ENABLE
     __HAL_FLASH_PREFETCH_BUFFER_ENABLE();
     #endif
-
-    #elif defined(STM32F7) || defined(STM32H7)
-
-    #if ART_ACCLERATOR_ENABLE
-    __HAL_FLASH_ART_ENABLE();
-    #endif
-
-    SCB_EnableICache();
-    SCB_EnableDCache();
-
-    #elif defined(STM32L4)
-
-    #if !INSTRUCTION_CACHE_ENABLE
-    __HAL_FLASH_INSTRUCTION_CACHE_DISABLE();
-    #endif
-    #if !DATA_CACHE_ENABLE
-    __HAL_FLASH_DATA_CACHE_DISABLE();
-    #endif
-    #if PREFETCH_ENABLE
-    __HAL_FLASH_PREFETCH_BUFFER_ENABLE();
-    #endif
-
     #endif
 
     // Set the priority grouping
