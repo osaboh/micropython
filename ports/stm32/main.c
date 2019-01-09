@@ -340,82 +340,6 @@ STATIC bool init_sdcard_fs(void) {
 }
 #endif
 
-#if !MICROPY_HW_USES_BOOTLOADER
-STATIC uint update_reset_mode(uint reset_mode) {
-#if MICROPY_HW_HAS_SWITCH
-    if (switch_get()) {
-
-        // The original method used on the pyboard is appropriate if you have 2
-        // or more LEDs.
-#if defined(MICROPY_HW_LED2)
-        for (uint i = 0; i < 3000; i++) {
-            if (!switch_get()) {
-                break;
-            }
-            mp_hal_delay_ms(20);
-            if (i % 30 == 29) {
-                if (++reset_mode > 3) {
-                    reset_mode = 1;
-                }
-                led_state(2, reset_mode & 1);
-                led_state(3, reset_mode & 2);
-                led_state(4, reset_mode & 4);
-            }
-        }
-        // flash the selected reset mode
-        for (uint i = 0; i < 6; i++) {
-            led_state(2, 0);
-            led_state(3, 0);
-            led_state(4, 0);
-            mp_hal_delay_ms(50);
-            led_state(2, reset_mode & 1);
-            led_state(3, reset_mode & 2);
-            led_state(4, reset_mode & 4);
-            mp_hal_delay_ms(50);
-        }
-        mp_hal_delay_ms(400);
-
-#elif defined(MICROPY_HW_LED1)
-
-        // For boards with only a single LED, we'll flash that LED the
-        // appropriate number of times, with a pause between each one
-        for (uint i = 0; i < 10; i++) {
-            led_state(1, 0);
-            for (uint j = 0; j < reset_mode; j++) {
-                if (!switch_get()) {
-                    break;
-                }
-                led_state(1, 1);
-                mp_hal_delay_ms(100);
-                led_state(1, 0);
-                mp_hal_delay_ms(200);
-            }
-            mp_hal_delay_ms(400);
-            if (!switch_get()) {
-                break;
-            }
-            if (++reset_mode > 3) {
-                reset_mode = 1;
-            }
-        }
-        // Flash the selected reset mode
-        for (uint i = 0; i < 2; i++) {
-            for (uint j = 0; j < reset_mode; j++) {
-                led_state(1, 1);
-                mp_hal_delay_ms(100);
-                led_state(1, 0);
-                mp_hal_delay_ms(200);
-            }
-            mp_hal_delay_ms(400);
-        }
-#else
-#error Need a reset mode update method
-#endif
-    }
-#endif
-    return reset_mode;
-}
-#endif
 
 void stm32_main(uint32_t reset_mode) {
     // Enable caches and prefetch buffers
@@ -502,11 +426,6 @@ soft_reset:
 #endif
     led_state(3, 0);
     led_state(4, 0);
-
-    #if !MICROPY_HW_USES_BOOTLOADER
-    // check if user switch held to select the reset mode
-    reset_mode = update_reset_mode(1);
-    #endif
 
     // Python threading init
     #if MICROPY_PY_THREAD
