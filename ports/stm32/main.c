@@ -279,20 +279,6 @@ soft_reset:
     // boot.py.
 
 
-#if MICROPY_HW_HAS_MMA7660
-    // MMA accel: init and reset
-    accel_init();
-#endif
-
-#if MICROPY_HW_ENABLE_SERVO
-    // servo
-    servo_init();
-#endif
-
-#if MICROPY_HW_ENABLE_DAC
-    // DAC
-    dac_init();
-#endif
 
 #if MICROPY_PY_NETWORK
     mod_network_init();
