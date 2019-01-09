@@ -455,7 +455,7 @@ soft_reset:
 
     readline_init0();
     pin_init0();
-    extint_init0();
+
     timer_init0();
     uart_init0();
 
