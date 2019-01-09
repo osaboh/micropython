@@ -10,7 +10,7 @@
 #define MICROPY_HW_ENABLE_RTC       (1)
 #define MICROPY_HW_ENABLE_SERVO     (1)
 #define MICROPY_HW_ENABLE_DAC       (1)
-#define MICROPY_HW_ENABLE_USB       (1)
+#define MICROPY_HW_ENABLE_USB       (0)
 
 // HSE is 12MHz
 #define MICROPY_HW_CLK_PLLM (12)
@@ -94,9 +94,6 @@
 #define MICROPY_HW_SDCARD_DETECT_PRESENT    (GPIO_PIN_RESET)
 
 // USB config
-#define MICROPY_HW_USB_FS              (1)
-#define MICROPY_HW_USB_VBUS_DETECT_PIN (pin_A9)
-#define MICROPY_HW_USB_OTG_ID_PIN      (pin_A10)
 
 // MMA accelerometer config
 #define MICROPY_HW_MMA_AVDD_PIN     (pin_B5)
