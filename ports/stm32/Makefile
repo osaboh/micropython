@@ -446,6 +446,10 @@ $(BUILD)/firmware.elf: $(OBJ)
 	$(Q)$(LD) $(LDFLAGS) -o $@ $^ $(LIBS)
 	$(Q)$(SIZE) $@
 
+libmicropython: $(OBJ) $(BUILD)/firmware.elf
+	$(ECHO) "GEN $@"
+	$(CROSS_COMPILE)ar rcs libmicropython.a $(OBJ)
+
 PLLVALUES = boards/pllvalues.py
 MAKE_PINS = boards/make-pins.py
 BOARD_PINS = boards/$(BOARD)/pins.csv
