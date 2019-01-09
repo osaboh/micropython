@@ -262,10 +262,6 @@ soft_reset:
     MP_STATE_PORT(pyb_stdio_uart) = NULL;
 #endif
 
-#if MICROPY_HW_ENABLE_CAN
-    can_init0();
-#endif
-
 
     // turn boot-up LEDs off
 #if !defined(MICROPY_HW_LED2)
@@ -348,9 +344,6 @@ soft_reset_exit:
     printf("PYB: soft reboot\n");
     timer_deinit();
     uart_deinit();
-#if MICROPY_HW_ENABLE_CAN
-    can_deinit();
-#endif
     machine_deinit();
 
     #if MICROPY_PY_THREAD
