@@ -95,6 +95,16 @@ struct _pyb_uart_obj_t {
 STATIC mp_obj_t pyb_uart_deinit(mp_obj_t self_in);
 extern void NORETURN __fatal_error(const char *msg);
 
+void change_pin_mode_for_repl_uart(void)
+{
+	/* change uart pin mode */
+	uint32_t mode = MP_HAL_PIN_MODE_ALT;
+	uint32_t pull = MP_HAL_PIN_PULL_UP;
+
+	mp_hal_pin_config_alt(MICROPY_HW_UART6_TX, mode, pull, AF_FN_UART, 6);
+	mp_hal_pin_config_alt(MICROPY_HW_UART6_RX, mode, pull, AF_FN_UART, 6);
+}
+
 void uart_init0(void) {
     #if defined(STM32H7)
     RCC_PeriphCLKInitTypeDef RCC_PeriphClkInit = {0};
@@ -116,6 +126,8 @@ void uart_init0(void) {
     for (int i = 0; i < MP_ARRAY_SIZE(MP_STATE_PORT(pyb_uart_obj_all)); i++) {
         MP_STATE_PORT(pyb_uart_obj_all)[i] = NULL;
     }
+
+	change_pin_mode_for_repl_uart();
 }
 
 // unregister all interrupt sources

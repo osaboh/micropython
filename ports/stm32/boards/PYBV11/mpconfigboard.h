@@ -97,3 +97,7 @@
 
 // MMA accelerometer config
 #define MICROPY_HW_MMA_AVDD_PIN     (pin_B5)
+
+// pyboard uart repl
+#define MICROPY_HW_UART_REPL       PYB_UART_6
+#define MICROPY_HW_UART_REPL_BAUD  115200
