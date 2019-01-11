@@ -446,7 +446,7 @@ $(BUILD)/firmware.elf: $(OBJ)
 	$(Q)$(LD) $(LDFLAGS) -o $@ $^ $(LIBS)
 	$(Q)$(SIZE) $@
 
-libmicropython: $(OBJ) $(BUILD)/firmware.elf
+libmicropython: $(OBJ) $(BUILD)/firmware.dfu
 	$(ECHO) "GEN $@"
 	$(CROSS_COMPILE)ar rcs libmicropython.a $(OBJ)
 
