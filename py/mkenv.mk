@@ -43,9 +43,9 @@ CP = cp
 MKDIR = mkdir
 SED = sed
 PYTHON = python
-
+CCACHE = ccache
 AS = $(CROSS_COMPILE)as
-CC = $(CROSS_COMPILE)gcc
+CC = $(CCACHE) $(CROSS_COMPILE)gcc
 CXX = $(CROSS_COMPILE)g++
 LD = $(CROSS_COMPILE)ld
 OBJCOPY = $(CROSS_COMPILE)objcopy
