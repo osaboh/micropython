@@ -7,7 +7,9 @@
 #include "usb.h"
 #include "uart.h"
 
+#ifndef __weak
 #define __weak __attribute__((weak))
+#endif
 
 // this table converts from HAL_StatusTypeDef to POSIX errno
 const byte mp_hal_status_to_errno_table[4] = {
