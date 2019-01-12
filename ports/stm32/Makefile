@@ -81,6 +81,11 @@ CFLAGS += -DMICROPY_FLOAT_IMPL=MICROPY_FLOAT_IMPL_FLOAT
 CFLAGS += -fsingle-precision-constant -Wdouble-promotion
 endif
 
+ifeq ($(EXTBOARD_LIB), 1)
+CFLAGS += -DEXTBOARD_LIB
+LD_FILES = boards/stm32f405.ld boards/common_ifs_without_fatfs.ld
+endif
+
 LDFLAGS = -nostdlib -L $(LD_DIR) $(addprefix -T,$(LD_FILES)) -Map=$(@:.elf=.map) --cref
 LIBS = $(shell $(CC) $(CFLAGS) -print-libgcc-file-name)
 
@@ -98,8 +103,6 @@ endif
 
 SRC_LIB = $(addprefix lib/,\
 	libc/string0.c \
-	oofatfs/ff.c \
-	oofatfs/option/unicode.c \
 	mp-readline/readline.c \
 	netutils/netutils.c \
 	timeutils/timeutils.c \
@@ -107,6 +110,13 @@ SRC_LIB = $(addprefix lib/,\
 	utils/interrupt_char.c \
 	utils/sys_stdio_mphal.c \
 	)
+
+ifneq ($(EXTBOARD_LIB), 1)
+SRC_LIB += $(addprefix lib/,\
+	oofatfs/ff.c \
+	oofatfs/option/unicode.c \
+	)
+endif
 
 ifeq ($(MICROPY_FLOAT_IMPL),double)
 SRC_LIBM = $(addprefix lib/libm_dbl/,\
@@ -194,6 +204,9 @@ DRIVERS_SRC_C = $(addprefix drivers/,\
 	dht/dht.c \
 	)
 
+ifeq ($(EXTBOARD_LIB), 1)
+include sources.mk
+else
 SRC_C = \
 	main.c \
 	system_stm32.c \
@@ -250,6 +263,7 @@ SRC_C = \
 	dac.c \
 	adc.c \
 	$(wildcard boards/$(BOARD)/*.c)
+endif
 
 SRC_O = \
 	$(STARTUP_FILE) \
@@ -359,7 +373,9 @@ $(BUILD)/lib/libc/string0.o: COPT += -O2
 # If we compile these using -O0 then it won't fit. So if you really want these
 # to be compiled with -O0, then edit boards/common.ld (in the .isr_vector section)
 # and comment out the following lines.
+ifneq ($(EXTBOARD_LIB), 1)
 $(BUILD)/$(FATFS_DIR)/ff.o: COPT += -Os
+endif
 $(filter $(PY_BUILD)/../extmod/vfs_fat_%.o, $(PY_O)): COPT += -Os
 $(PY_BUILD)/formatfloat.o: COPT += -Os
 $(PY_BUILD)/parsenum.o: COPT += -Os
