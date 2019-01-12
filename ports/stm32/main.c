@@ -134,6 +134,10 @@ MP_DEFINE_CONST_FUN_OBJ_KW(pyb_main_obj, 1, pyb_main);
 void stm32_main(uint32_t reset_mode) {
     // Enable caches and prefetch buffers
 
+#if !defined(EXTBOARD_LIB)
+	/*
+	  for PYBOARD or Similar board
+	*/
     #if defined(STM32F4)
 
     #if INSTRUCTION_CACHE_ENABLE
@@ -177,7 +181,7 @@ void stm32_main(uint32_t reset_mode) {
         __HAL_RCC_D2SRAM2_CLK_ENABLE();
         __HAL_RCC_D2SRAM3_CLK_ENABLE();
     #endif
-
+#endif /* !defined(EXTBOARD_LIB) */
 
     #if defined(MICROPY_BOARD_EARLY_INIT)
     MICROPY_BOARD_EARLY_INIT();
