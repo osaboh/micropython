@@ -157,7 +157,11 @@ STATIC mp_obj_t machine_info(size_t n_args, const mp_obj_t *args) {
         printf("_ebss=%p\n", &_ebss);
         printf("_estack=%p\n", &_estack);
         printf("_ram_start=%p\n", &_ram_start);
+#ifdef EXTBOARD_LIB
+        printf("_heap_start=%lx\n", (uint32_t)_heap_start);
+#else
         printf("_heap_start=%p\n", &_heap_start);
+#endif
         printf("_heap_end=%p\n", &_heap_end);
         printf("_ram_end=%p\n", &_ram_end);
     }

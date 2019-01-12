@@ -223,15 +223,11 @@ soft_reset:
     // to recover from limit hit.  (Limit is measured in bytes.)
     // Note: stack control relies on main thread being initialised above
     mp_stack_set_top(&_estack);
-#ifdef EXTBOARD_LIB
     mp_stack_set_limit((char*)&_estack - (char*)&_heap_end - 1024);
-#else /* EXTBOARD_LIB */
-    mp_stack_set_limit((char*)&_estack - (char*)&_heap_end - 1024);
-#endif /* EXTBOARD_LIB */
 
     // GC init
 #ifdef EXTBOARD_LIB
-    gc_init(&_heap_start, &_heap_end);
+    gc_init((uint32_t *)_heap_start, (uint32_t *)_heap_end);
 #else  /* EXTBOARD_LIB */
     gc_init(&_heap_start, &_heap_end);
 #endif /* EXTBOARD_LIB */
