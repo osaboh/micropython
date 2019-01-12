@@ -572,6 +572,7 @@ const mp_obj_type_t pyb_sdcard_type = {
 };
 
 void sdcard_init_vfs(fs_user_mount_t *vfs, int part) {
+#if !defined(EXTBOARD_LIB)
     vfs->base.type = &mp_fat_vfs_type;
     vfs->flags |= FSUSER_NATIVE | FSUSER_HAVE_IOCTL;
     vfs->fatfs.drv = vfs;
@@ -584,6 +585,7 @@ void sdcard_init_vfs(fs_user_mount_t *vfs, int part) {
     vfs->writeblocks[2] = (mp_obj_t)sdcard_write_blocks; // native version
     vfs->u.ioctl[0] = (mp_obj_t)&pyb_sdcard_ioctl_obj;
     vfs->u.ioctl[1] = (mp_obj_t)&pyb_sdcard_obj;
+#endif
 }
 
 #endif // MICROPY_HW_HAS_SDCARD

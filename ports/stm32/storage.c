@@ -271,6 +271,7 @@ const mp_obj_type_t pyb_flash_type = {
 };
 
 void pyb_flash_init_vfs(fs_user_mount_t *vfs) {
+#if !defined(EXTBOARD_LIB)
     vfs->base.type = &mp_fat_vfs_type;
     vfs->flags |= FSUSER_NATIVE | FSUSER_HAVE_IOCTL;
     vfs->fatfs.drv = vfs;
@@ -283,4 +284,5 @@ void pyb_flash_init_vfs(fs_user_mount_t *vfs) {
     vfs->writeblocks[2] = (mp_obj_t)storage_write_blocks; // native version
     vfs->u.ioctl[0] = (mp_obj_t)&pyb_flash_ioctl_obj;
     vfs->u.ioctl[1] = (mp_obj_t)&pyb_flash_obj;
+#endif
 }

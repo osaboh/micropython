@@ -219,10 +219,18 @@ soft_reset:
     // to recover from limit hit.  (Limit is measured in bytes.)
     // Note: stack control relies on main thread being initialised above
     mp_stack_set_top(&_estack);
+#ifdef EXTBOARD_LIB
     mp_stack_set_limit((char*)&_estack - (char*)&_heap_end - 1024);
+#else /* EXTBOARD_LIB */
+    mp_stack_set_limit((char*)&_estack - (char*)&_heap_end - 1024);
+#endif /* EXTBOARD_LIB */
 
     // GC init
+#ifdef EXTBOARD_LIB
     gc_init(&_heap_start, &_heap_end);
+#else  /* EXTBOARD_LIB */
+    gc_init(&_heap_start, &_heap_end);
+#endif /* EXTBOARD_LIB */
 
     #if MICROPY_ENABLE_PYSTACK
     static mp_obj_t pystack[384];
@@ -338,3 +346,11 @@ soft_reset_exit:
 
     goto soft_reset;
 }
+#ifdef EXTBOARD_LIB
+int py_main(int argc, char **argv)
+{
+	const uint32_t reset_mode = 0; /* @todo fix */
+	stm32_main(reset_mode);
+	return 0;
+}
+#endif /* EXTBOARD_LIB */

@@ -191,9 +191,13 @@ STATIC const mp_rom_map_elem_t mp_module_io_globals_table[] = {
     { MP_ROM_QSTR(MP_QSTR_resource_stream), MP_ROM_PTR(&resource_stream_obj) },
     #endif
     #if MICROPY_PY_IO_FILEIO
+#if !defined(EXTBOARD_LIB)
     { MP_ROM_QSTR(MP_QSTR_FileIO), MP_ROM_PTR(&mp_type_fileio) },
+#endif
     #if MICROPY_CPYTHON_COMPAT
+#if !defined(EXTBOARD_LIB)
     { MP_ROM_QSTR(MP_QSTR_TextIOWrapper), MP_ROM_PTR(&mp_type_textio) },
+#endif
     #endif
     #endif
     { MP_ROM_QSTR(MP_QSTR_StringIO), MP_ROM_PTR(&mp_type_stringio) },

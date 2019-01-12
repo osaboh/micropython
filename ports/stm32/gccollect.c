@@ -52,7 +52,13 @@ void gc_collect(void) {
     #if MICROPY_PY_THREAD
     gc_collect_root((void**)sp, ((uint32_t)MP_STATE_THREAD(stack_top) - sp) / sizeof(uint32_t));
     #else
-    gc_collect_root((void**)sp, ((uint32_t)&_ram_end - sp) / sizeof(uint32_t));
+    #ifdef EXTBOARD_LIB
+      /* @todo fix */
+      uint32_t replace_ram_end_from_ldscript = 0x20000000 + (128 * 1024);
+      gc_collect_root((void**)sp, ((uint32_t)&replace_ram_end_from_ldscript - sp) / sizeof(uint32_t));
+    #else
+      gc_collect_root((void**)sp, ((uint32_t)&_ram_end - sp) / sizeof(uint32_t));
+    #endif	/* EXTBOARD_LIB */
     #endif
 
     // trace root pointers from any threads

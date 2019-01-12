@@ -184,10 +184,12 @@ STATIC mp_obj_t machine_info(size_t n_args, const mp_obj_t *args) {
         for (mp_vfs_mount_t *vfs = MP_STATE_VM(vfs_mount_table); vfs != NULL; vfs = vfs->next) {
             if (strncmp("/flash", vfs->str, vfs->len) == 0) {
                 // assumes that it's a FatFs filesystem
+#if !defined(EXTBOARD_LIB)
                 fs_user_mount_t *vfs_fat = MP_OBJ_TO_PTR(vfs->obj);
                 DWORD nclst;
                 f_getfree(&vfs_fat->fatfs, &nclst);
                 printf("LFS free: %u bytes\n", (uint)(nclst * vfs_fat->fatfs.csize * 512));
+#endif
                 break;
             }
         }
