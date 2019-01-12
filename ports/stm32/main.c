@@ -336,6 +336,7 @@ soft_reset_exit:
     storage_flush();
 
     printf("PYB: soft reboot\n");
+    mp_hal_delay_ms(50);		/* @todo fix */
     timer_deinit();
     uart_deinit();
     machine_deinit();
