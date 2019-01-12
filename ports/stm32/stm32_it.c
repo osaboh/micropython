@@ -83,6 +83,10 @@
 #include "i2c.h"
 #include "usb.h"
 
+#ifndef __weak
+#define __weak __attribute__((weak))
+#endif
+
 extern void __fatal_error(const char*);
 extern PCD_HandleTypeDef pcd_fs_handle;
 extern PCD_HandleTypeDef pcd_hs_handle;
@@ -192,7 +196,7 @@ void HardFault_C_Handler(ExceptionRegisters_t *regs) {
 
 // Naked functions have no compiler generated gunk, so are the best thing to
 // use for asm functions.
-__attribute__((naked))
+__weak __attribute__((naked))
 void HardFault_Handler(void) {
 
     // From the ARMv7M Architecture Reference Manual, section B.1.5.6
@@ -217,7 +221,7 @@ void HardFault_Handler(void) {
   * @param  None
   * @retval None
   */
-void NMI_Handler(void) {
+__weak void NMI_Handler(void) {
 }
 
 /**
@@ -225,7 +229,7 @@ void NMI_Handler(void) {
   * @param  None
   * @retval None
   */
-void MemManage_Handler(void) {
+__weak void MemManage_Handler(void) {
     /* Go to infinite loop when Memory Manage exception occurs */
     while (1) {
         __fatal_error("MemManage");
@@ -237,7 +241,7 @@ void MemManage_Handler(void) {
   * @param  None
   * @retval None
   */
-void BusFault_Handler(void) {
+__weak void BusFault_Handler(void) {
     /* Go to infinite loop when Bus Fault exception occurs */
     while (1) {
         __fatal_error("BusFault");
@@ -249,7 +253,7 @@ void BusFault_Handler(void) {
   * @param  None
   * @retval None
   */
-void UsageFault_Handler(void) {
+__weak void UsageFault_Handler(void) {
     /* Go to infinite loop when Usage Fault exception occurs */
     while (1) {
         __fatal_error("UsageFault");
@@ -261,7 +265,7 @@ void UsageFault_Handler(void) {
   * @param  None
   * @retval None
   */
-void SVC_Handler(void) {
+__weak void SVC_Handler(void) {
 }
 
 /**
@@ -269,7 +273,7 @@ void SVC_Handler(void) {
   * @param  None
   * @retval None
   */
-void DebugMon_Handler(void) {
+__weak void DebugMon_Handler(void) {
 }
 
 /**
@@ -277,7 +281,7 @@ void DebugMon_Handler(void) {
   * @param  None
   * @retval None
   */
-void PendSV_Handler(void) {
+__weak void PendSV_Handler(void) {
     pendsv_isr_handler();
 }
 
@@ -286,7 +290,7 @@ void PendSV_Handler(void) {
   * @param  None
   * @retval None
   */
-void SysTick_Handler(void) {
+__weak void SysTick_Handler(void) {
     // Instead of calling HAL_IncTick we do the increment here of the counter.
     // This is purely for efficiency, since SysTick is called 1000 times per
     // second at the highest interrupt priority.
@@ -505,7 +509,7 @@ void EXTI9_5_IRQHandler(void) {
     IRQ_EXIT(EXTI9_5_IRQn);
 }
 
-void EXTI15_10_IRQHandler(void) {
+__weak void EXTI15_10_IRQHandler(void) {
     IRQ_ENTER(EXTI15_10_IRQn);
     Handle_EXTI_Irq(10);
     Handle_EXTI_Irq(11);
@@ -633,7 +637,7 @@ void TIM5_IRQHandler(void) {
 }
 
 #if defined(TIM6) // STM32F401 doesn't have TIM6
-void TIM6_DAC_IRQHandler(void) {
+__weak void TIM6_DAC_IRQHandler(void) {
     IRQ_ENTER(TIM6_DAC_IRQn);
     timer_irq_handler(6);
     IRQ_EXIT(TIM6_DAC_IRQn);
@@ -714,7 +718,7 @@ void UART5_IRQHandler(void) {
     IRQ_EXIT(UART5_IRQn);
 }
 
-void USART6_IRQHandler(void) {
+__weak void USART6_IRQHandler(void) {
     IRQ_ENTER(USART6_IRQn);
     uart_irq_handler(6);
     IRQ_EXIT(USART6_IRQn);

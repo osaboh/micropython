@@ -30,6 +30,10 @@
 #include "systick.h"
 #include "pybthread.h"
 
+#ifndef __weak
+#define __weak __attribute__((weak))
+#endif
+
 extern __IO uint32_t uwTick;
 
 // We provide our own version of HAL_Delay that calls __WFI while waiting,
@@ -52,7 +56,7 @@ void HAL_Delay(uint32_t Delay) {
 
 // Core delay function that does an efficient sleep and may switch thread context.
 // If IRQs are enabled then we must have the GIL.
-void mp_hal_delay_ms(mp_uint_t Delay) {
+__weak void mp_hal_delay_ms(mp_uint_t Delay) {
     if (query_irq() == IRQ_STATE_ENABLED) {
         // IRQs enabled, so can use systick counter to do the delay
         uint32_t start = uwTick;

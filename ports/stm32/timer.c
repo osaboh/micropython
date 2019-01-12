@@ -35,6 +35,10 @@
 #include "pin.h"
 #include "irq.h"
 
+#ifndef __weak
+#define __weak __attribute__((weak))
+#endif
+
 /// \moduleref pyb
 /// \class Timer - periodically call a function
 ///
@@ -214,7 +218,7 @@ TIM_HandleTypeDef *timer_tim6_init(uint freq) {
 #endif
 
 // Interrupt dispatch
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
+__weak void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     #if MICROPY_HW_ENABLE_SERVO
     if (htim == &TIM5_Handle) {
         servo_timer_irq_callback();
